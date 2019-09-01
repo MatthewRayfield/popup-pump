@@ -73,8 +73,60 @@
         border-bottom-right-radius: 15px;
         /*background: linear-gradient(90deg, rgba(51,51,51,1) 0%, rgba(34,34,34,1) 40%, rgba(34,34,34,1) 60%, rgba(51,51,51,1) 100%);*/
     }
+    #hose {
+        position: absolute;
+        bottom: 100px;
+        width: 50%;
+        height: 60px;
+        /*animation-name: grow;*/
+        animation-duration: 1s;
+        animation-direction: normal;
+        animation-iteration-count: infinite;
+        animation-timing-function: alternate;
+    }
+    #hose.left {
+        right: 50%;
+    }
+    #hose.right {
+        left: 50%;
+    }
+    #hose .left {
+        position: absolute;
+        top: 0;
+        border-top: 15px solid #333;
+        border-right: 15px solid #333;
+        border-top-right-radius: 30px;
+        width: 50%;
+        height: 15px;
+    }
+    #hose .right {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        border-bottom: 15px solid #333;
+        border-left: 15px solid #333;
+        border-bottom-left-radius: 30px;
+        width: 50%;
+        height: 15px;
+    }
+    @keyframes grow {
+        0% {
+            width: 0%;
+        }
+        100% {
+            width 100%;
+        }
+    }
 </style>
 
+<div id="hose" class="left">
+    <div class="left"></div>
+    <div class="right"></div>
+</div>
+<div id="hose" class="right">
+    <div class="left"></div>
+    <div class="right"></div>
+</div>
 <div id="wrapper">
     <div id="rod"></div>
     <div id="tube"></div>
