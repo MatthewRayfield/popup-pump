@@ -73,24 +73,23 @@
         border-bottom-right-radius: 15px;
         /*background: linear-gradient(90deg, rgba(51,51,51,1) 0%, rgba(34,34,34,1) 40%, rgba(34,34,34,1) 60%, rgba(51,51,51,1) 100%);*/
     }
-    #hose {
+    .hose {
         position: absolute;
-        bottom: 100px;
-        width: 50%;
+        bottom: 70px;
+        width: 0;
         height: 60px;
-        /*animation-name: grow;*/
-        animation-duration: 1s;
-        animation-direction: normal;
-        animation-iteration-count: infinite;
-        animation-timing-function: alternate;
+        transition: width .2s linear;
     }
-    #hose.left {
+    .hose.open {
+        width: 50%;
+    }
+    #hose-left {
         right: 50%;
     }
-    #hose.right {
+    #hose-right {
         left: 50%;
     }
-    #hose .left {
+    .hose .left {
         position: absolute;
         top: 0;
         border-top: 15px solid #333;
@@ -99,7 +98,7 @@
         width: 50%;
         height: 15px;
     }
-    #hose .right {
+    .hose .right {
         position: absolute;
         left: 50%;
         bottom: 0;
@@ -109,21 +108,13 @@
         width: 50%;
         height: 15px;
     }
-    @keyframes grow {
-        0% {
-            width: 0%;
-        }
-        100% {
-            width 100%;
-        }
-    }
 </style>
 
-<div id="hose" class="left">
+<div id="hose-left" class="hose">
     <div class="left"></div>
     <div class="right"></div>
 </div>
-<div id="hose" class="right">
+<div id="hose-right" class="hose">
     <div class="left"></div>
     <div class="right"></div>
 </div>
@@ -134,3 +125,7 @@
     <div id="topthing"></div>
     <div id="handle"></div>
 </div>
+<script>
+    window.hoseLeft = document.getElementById('hose-left');
+    window.hoseRight = document.getElementById('hose-right');
+</script>
