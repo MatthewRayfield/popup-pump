@@ -27,7 +27,6 @@
         top = (screen.height-height)/2;
 
         pumpPopup = window.open('pump.html', 'pump', 'width='+width+',height='+height+',left='+left+',top='+top)
-        setTimeout(function () {pumpPopup.addEventListener('resize', resized)}, 500);
     }
 
     function close() {
@@ -38,24 +37,13 @@
         if (pumpPopup) pumpPopup.close();
     }
 
-    function resized() {
-        var height = pumpPopup.outerHeight;
-
-        if (height < lastHeight) {
-            selected.forEach(function (popup) {
-                popup.pump((lastHeight - height) / 4);
-            });
-        }
-
-        lastHeight = height;
-    }
-
     function loop() {
         var ppWidth, ppHeight, ppLeft, ppTop,
             lPoint, rPoint,
             testPoints,
             leftCollision = false,
-            rightCollision = false;
+            rightCollision = false,
+            height;
 
         if (pumpPopup && pumpPopup.hoseLeft && pumpPopup.hoseRight) {
             selected = [];
@@ -75,18 +63,30 @@
                     pRight = pLeft + popup.outerWidth;
 
                 if (lPoint[0] > pLeft && lPoint[0] < pRight && lPoint[1] > pTop && lPoint[1] < pBottom) {
-                    if (selected.indexOf(popup) == -1) selected.push(popup);
-                    leftCollision = true;
+                    if (selected.indexOf(popup) == -1) {
+                        selected.push(popup);
+                        leftCollision = true;
+                    }
                 }
 
                 if (rPoint[0] > pLeft && rPoint[0] < pRight && rPoint[1] > pTop && rPoint[1] < pBottom) {
-                    if (selected.indexOf(popup) == -1) selected.push(popup);
-                    rightCollision = true;
+                    if (selected.indexOf(popup) == -1) {
+                        selected.push(popup);
+                        rightCollision = true;
+                    }
                 }
             });
 
             pumpPopup.hoseLeft.className = leftCollision ? 'hose open' : 'hose';
             pumpPopup.hoseRight.className = rightCollision ? 'hose open' : 'hose';
+
+            height = pumpPopup.outerHeight;
+            if (height < lastHeight) {
+                selected.forEach(function (popup) {
+                    popup.pump((lastHeight - height) / 4);
+                });
+            }
+            lastHeight = height;
         }
 
         setTimeout(loop, 1000/10);
