@@ -1,4 +1,27 @@
 <script>
+    var mouseDown = false;
+
+    function pump(amount) {
+        amount = Math.round(amount/2) * 2;
+
+        window.moveBy(amount/-2, amount/-2);
+        window.resizeBy(amount, amount);
+    }
+
+    function loop() {
+        if (mouseDown) {
+            pump(-2);
+        }
+
+        setTimeout(loop, 1000/30);
+    }
+
+    window.addEventListener('load', function () {
+        document.addEventListener('mousedown', function () {mouseDown = true;});
+        document.addEventListener('mouseup', function () {mouseDown = false;});
+        loop();
+    });
+
     function r() {
         return Math.floor(Math.random()*256);
     }

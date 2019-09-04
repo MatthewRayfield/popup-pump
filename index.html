@@ -2,7 +2,8 @@
     var popups = [],
         pumpPopup,
         last = {},
-        hoseLeft, hoseRight;
+        hoseLeft, hoseRight,
+        lastHeight;
 
     function launch() {
         var i, popup,
@@ -26,6 +27,7 @@
         top = (screen.height-height)/2;
 
         pumpPopup = window.open('pump.html', 'pump', 'width='+width+',height='+height+',left='+left+',top='+top)
+        setTimeout(function () {pumpPopup.addEventListener('resize', resized)}, 500);
     }
 
     function close() {
@@ -36,6 +38,18 @@
         if (pumpPopup) pumpPopup.close();
     }
 
+    function resized() {
+        var height = pumpPopup.outerHeight;
+
+        if (height < lastHeight) {
+            selected.forEach(function (popup) {
+                popup.pump((lastHeight - height) / 4);
+            });
+        }
+
+        lastHeight = height;
+    }
+
     function loop() {
         var ppWidth, ppHeight, ppLeft, ppTop,
             lPoint, rPoint,
@@ -44,6 +58,8 @@
             rightCollision = false;
 
         if (pumpPopup && pumpPopup.hoseLeft && pumpPopup.hoseRight) {
+            selected = [];
+
             ppWidth = pumpPopup.outerWidth;
             ppHeight = pumpPopup.outerHeight;
             ppLeft = pumpPopup.screenLeft;
@@ -52,25 +68,25 @@
             lPoint = [ppLeft, ppTop+ppHeight-200];
             rPoint = [ppLeft+ppWidth, ppTop+ppHeight-200];
 
-            if (last.width != ppWidth || last.height != ppHeight || last.left != ppLeft || last.top != ppTop) {
-                popups.forEach(function (popup) {
-                    var pTop = popup.screenTop,
-                        pLeft = popup.screenLeft,
-                        pBottom = pTop + popup.outerHeight,
-                        pRight = pLeft + popup.outerWidth;
+            popups.forEach(function (popup) {
+                var pTop = popup.screenTop,
+                    pLeft = popup.screenLeft,
+                    pBottom = pTop + popup.outerHeight,
+                    pRight = pLeft + popup.outerWidth;
 
-                    if (lPoint[0] > pLeft && lPoint[0] < pRight && lPoint[1] > pTop && lPoint[1] < pBottom) {
-                        leftCollision = true;
-                    }
+                if (lPoint[0] > pLeft && lPoint[0] < pRight && lPoint[1] > pTop && lPoint[1] < pBottom) {
+                    if (selected.indexOf(popup) == -1) selected.push(popup);
+                    leftCollision = true;
+                }
 
-                    if (rPoint[0] > pLeft && rPoint[0] < pRight && rPoint[1] > pTop && rPoint[1] < pBottom) {
-                        rightCollision = true;
-                    }
-                });
+                if (rPoint[0] > pLeft && rPoint[0] < pRight && rPoint[1] > pTop && rPoint[1] < pBottom) {
+                    if (selected.indexOf(popup) == -1) selected.push(popup);
+                    rightCollision = true;
+                }
+            });
 
-                pumpPopup.hoseLeft.className = leftCollision ? 'hose open' : 'hose';
-                pumpPopup.hoseRight.className = rightCollision ? 'hose open' : 'hose';
-            }
+            pumpPopup.hoseLeft.className = leftCollision ? 'hose open' : 'hose';
+            pumpPopup.hoseRight.className = rightCollision ? 'hose open' : 'hose';
         }
 
         setTimeout(loop, 1000/10);
